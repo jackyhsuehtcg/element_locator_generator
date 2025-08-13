@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element Locator Generator - 設定</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎯 Element Locator Generator</h1>
+            <p class="subtitle">設定 LLM API 伺服器</p>
+        </header>
+
+        <main class="main-content">
+            <form class="settings-form" id="settingsForm">
+                <div class="form-group">
+                    <label for="provider" class="form-label">
+                        <span class="label-text">模型提供商</span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <select id="provider" name="provider" class="form-input" required>
+                        <option value="">請選擇模型提供商</option>
+                        <option value="lmstudio">LM Studio (本地)</option>
+                        <option value="ollama">Ollama (本地)</option>
+                        <option value="openai">OpenAI</option>
+                        <option value="gemini">Google Gemini</option>
+                        <option value="anthropic">Anthropic Claude</option>
+                    </select>
+                    <div class="form-hint">
+                        選擇你要使用的 AI 模型提供商
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="apiUrl" class="form-label">
+                        <span class="label-text">API URL</span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <input 
+                        type="url" 
+                        id="apiUrl" 
+                        name="apiUrl" 
+                        class="form-input" 
+                        placeholder="http://localhost:1234/v1/chat/completions"
+                        required
+                    >
+                    <div class="form-hint">
+                        輸入你的 LLM API 伺服器 URL，支援 OpenAI 相容的 API 格式
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="modelName" class="form-label">
+                        <span class="label-text">模型名稱</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="modelName" 
+                        name="modelName" 
+                        class="form-input" 
+                        placeholder="lm-studio"
+                    >
+                    <div class="form-hint">
+                        模型名稱（選填，預設為 "lm-studio"）
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="apiKey" class="form-label">
+                        <span class="label-text">API Key</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        id="apiKey" 
+                        name="apiKey" 
+                        class="form-input" 
+                        placeholder="sk-..."
+                    >
+                    <div class="form-hint">
+                        API 金鑰（選填，本地 LM Studio 通常不需要）
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="temperature" class="form-label">
+                        <span class="label-text">Temperature</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="temperature" 
+                        name="temperature" 
+                        class="form-input" 
+                        min="0" 
+                        max="2" 
+                        step="0.1" 
+                        value="0.1"
+                    >
+                    <div class="form-hint">
+                        控制回應的隨機性（0.0 - 2.0，建議 0.1 以獲得穩定結果）
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="maxTokens" class="form-label">
+                        <span class="label-text">Max Tokens</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="maxTokens" 
+                        name="maxTokens" 
+                        class="form-input" 
+                        min="100" 
+                        max="4096" 
+                        value="512"
+                    >
+                    <div class="form-hint">
+                        最大生成 token 數量（100 - 4096）
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="testButton" class="btn btn-secondary">
+                        🧪 測試連接
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        💾 儲存設定
+                    </button>
+                </div>
+            </form>
+
+            <div class="test-result" id="testResult" style="display: none;">
+                <div class="test-result-content">
+                    <div class="test-result-icon" id="testResultIcon"></div>
+                    <div class="test-result-message" id="testResultMessage"></div>
+                </div>
+            </div>
+
+
+            <div class="help-section">
+                <h3>使用說明</h3>
+                <div class="help-content">
+                    <div class="help-item">
+                        <strong>LM Studio:</strong> 
+                        本地 AI 模型服務，預設 URL：<code>http://localhost:1234/v1/chat/completions</code>
+                    </div>
+                    <div class="help-item">
+                        <strong>Ollama:</strong> 
+                        本地 AI 模型服務，預設 URL：<code>http://localhost:11434/v1/chat/completions</code>
+                    </div>
+                    <div class="help-item">
+                        <strong>OpenAI:</strong> 
+                        OpenAI 官方 API，需要 API Key，支援 GPT-4 等模型
+                    </div>
+                    <div class="help-item">
+                        <strong>Google Gemini:</strong> 
+                        Google 的 Gemini AI 服務，需要 API Key，支援 Gemini 1.5 等模型
+                    </div>
+                    <div class="help-item">
+                        <strong>Anthropic Claude:</strong> 
+                        Anthropic 的 Claude AI 服務，需要 API Key，支援 Claude 3 等模型
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

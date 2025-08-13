@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 360px;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .header {
+      padding: 20px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .header h1 {
+      margin: 0 0 5px 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header p {
+      margin: 0;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .api-section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .api-section h3 {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    #apiKeyInput {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+    }
+
+    #apiKeyInput::placeholder {
+      color: #666;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #45a049;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #da190b;
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .action-section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .action-section h3 {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-section p {
+      margin: 0 0 16px 0;
+      font-size: 12px;
+      opacity: 0.8;
+      line-height: 1.4;
+    }
+
+    .status {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .status-success {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4CAF50;
+      border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+
+    .status-error {
+      background: rgba(244, 67, 54, 0.2);
+      color: #f44336;
+      border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .status-warning {
+      background: rgba(255, 193, 7, 0.2);
+      color: #FFC107;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+
+    .help-link {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .help-link a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 11px;
+    }
+
+    .help-link a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hide {
+      display: none;
+    }
+    
+    .status-info {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 11px;
+    }
+    
+    .status-info p {
+      margin: 0 0 8px 0;
+      font-weight: 600;
+    }
+    
+    .status-info ul {
+      margin: 0;
+      padding-left: 16px;
+      line-height: 1.4;
+    }
+    
+    .status-info li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎯 Element Locator Generator</h1>
+    <p>使用本地 LLM 生成精確的元素定位器</p>
+  </div>
+
+  <div class="content">
+    <!-- 操作區域 -->
+    <div class="action-section">
+      <h3>🚀 持續模式</h3>
+      <p>啟動後將持續運行，可跨頁面使用。確保 LM Studio 在 localhost:1234 運行。</p>
+      
+      <button id="enablePersistentMode" class="btn btn-primary" style="width: 100%; margin-bottom: 8px;">
+        <span>⚡</span>
+        <span>啟動持續模式</span>
+      </button>
+      
+      <button id="disablePersistentMode" class="btn btn-danger hide" style="width: 100%;">
+        <span>⏹</span>
+        <span>停用持續模式</span>
+      </button>
+      
+      <div class="status-info">
+        <p><strong>使用說明：</strong></p>
+        <ul>
+          <li>啟動後會在所有頁面顯示可拖移的停止按鈕</li>
+          <li>點擊任何元素即可生成 locator</li>
+          <li>切換頁面後自動重新啟動</li>
+          <li>點擊停止按鈕或使用 popup 停用</li>
+        </ul>
+      </div>
+      
+      <div id="actionStatus" class="hide"></div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
