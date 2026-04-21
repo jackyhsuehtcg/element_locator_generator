@@ -1,458 +1,498 @@
-/* content.css - 網頁注入的樣式 */
+/* content.css — Obsidian Workshop (Injection Styles) */
 
-/* 浮動提示樣式 */
+:root {
+    --cl-accent: #d4a574;
+    --cl-teal: #6ca0b8;
+    --cl-success: #7fb88a;
+    --cl-warning: #c9a86c;
+    --cl-error: #c97474;
+    --cl-highlight: #e8926c;
+    --cl-bg-base: #1e1e22;
+    --cl-bg-surface: #26262c;
+    --cl-bg-elevated: #313138;
+    --cl-bg-input: #2a2a31;
+    --cl-border: #38383f;
+    --cl-border-light: #48484f;
+    --cl-text: #d4d4dc;
+    --cl-text-secondary: #9494a2;
+    --cl-text-muted: #6a6a78;
+    --cl-font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+    --cl-font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --cl-radius: 10px;
+    --cl-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    --cl-glow: 0 0 24px rgba(212, 165, 116, 0.06);
+}
+
+/* Selection Overlay */
 #element-locator-overlay {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 999999;
-  pointer-events: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  max-width: 300px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2147483647;
+    pointer-events: none;
+    max-width: 260px;
 }
 
 #element-locator-overlay .overlay-content {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 12px 16px;
-  text-align: left;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
-  animation: slideInRight 0.3s ease-out;
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+    background: var(--cl-bg-surface);
+    border: 1px solid var(--cl-border);
+    color: var(--cl-text);
+    padding: 12px 16px;
+    font-family: var(--cl-font-mono);
+    font-size: 11px;
+    line-height: 1.6;
+    box-shadow: var(--cl-shadow), var(--cl-glow);
+    border-radius: var(--cl-radius);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    animation: cl-slideIn 0.25s ease-out;
 }
 
 #element-locator-overlay .overlay-content span:first-child {
-  font-weight: 600;
-  font-size: 14px;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--cl-accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#element-locator-overlay .overlay-content span:first-child::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--cl-accent);
+    border-radius: 50%;
+    animation: cl-pulse 1.5s ease-in-out infinite;
 }
 
 #element-locator-overlay .overlay-content span:nth-child(2) {
-  opacity: 0.9;
-  font-size: 12px;
+    color: var(--cl-text-muted);
+    font-size: 10px;
 }
 
-#element-locator-overlay .overlay-content .model-info {
-  opacity: 0.8;
-  font-size: 11px;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-top: 2px;
-  font-weight: 500;
-}
-
-/* 結果顯示樣式 */
+/* Result Panel */
 #locator-result {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000000;
-  max-width: 90vw;
-  max-height: 80vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  border-radius: 16px;
-  overflow: hidden;
-  backdrop-filter: blur(20px);
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2147483647;
+    max-width: 640px;
+    width: 90vw;
+    max-height: 85vh;
+    font-family: var(--cl-font-sans);
+    box-shadow: var(--cl-shadow), 0 0 60px rgba(0, 0, 0, 0.3);
+    border-radius: 14px;
+    overflow: hidden;
+    animation: cl-fadeIn 0.3s ease-out;
 }
 
 #locator-result .result-content {
-  background: rgba(255, 255, 255, 0.95);
-  color: #333;
-  min-width: 600px;
-  max-width: 800px;
+    background: var(--cl-bg-surface);
+    color: var(--cl-text);
+    border: 1px solid var(--cl-border);
+    border-radius: 14px;
 }
 
 #locator-result .result-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background: var(--cl-bg-surface);
+    color: var(--cl-text);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--cl-border);
 }
 
 #locator-result .result-header h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+    margin: 0;
+    font-family: var(--cl-font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cl-accent);
+    letter-spacing: 0.02em;
 }
 
 #locator-result .close-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: background 0.2s;
+    background: transparent;
+    border: 1px solid var(--cl-border);
+    color: var(--cl-text-muted);
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s ease;
 }
 
 #locator-result .close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+    border-color: var(--cl-error);
+    color: var(--cl-error);
 }
 
 #locator-result .result-body {
-  padding: 0;
-  max-height: 70vh;
-  overflow-y: auto;
+    padding: 0;
+    max-height: 60vh;
+    overflow-y: auto;
+    background: var(--cl-bg-surface);
 }
 
-/* Locator 項目樣式 */
+/* Locator Items */
 .locator-item {
-  border-bottom: 1px solid #e9ecef;
-  padding: 16px 20px;
+    border-bottom: 1px solid var(--cl-border);
+    padding: 14px 18px;
+    transition: background 0.15s ease;
 }
 
 .locator-item:last-child {
-  border-bottom: none;
+    border-bottom: none;
+}
+
+.locator-item:hover {
+    background: var(--cl-bg-elevated);
 }
 
 .locator-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
 }
 
 .locator-type {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    font-family: var(--cl-font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--cl-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.locator-type::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--cl-teal);
+    border-radius: 2px;
 }
 
 .copy-single-btn {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+    background: transparent;
+    color: var(--cl-text-muted);
+    border: 1px solid var(--cl-border);
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--cl-font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .copy-single-btn:hover {
-  background: #0056b3;
-  transform: translateY(-1px);
+    border-color: var(--cl-accent);
+    color: var(--cl-accent);
+    background: rgba(212, 165, 116, 0.06);
+}
+
+.locator-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.locator-status {
+    font-family: var(--cl-font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+}
+
+.status-success {
+    background: rgba(127, 184, 138, 0.1);
+    color: var(--cl-success);
+    border: 1px solid rgba(127, 184, 138, 0.2);
+}
+
+.status-warning {
+    background: rgba(201, 168, 108, 0.1);
+    color: var(--cl-warning);
+    border: 1px solid rgba(201, 168, 108, 0.2);
+}
+
+.status-error {
+    background: rgba(201, 116, 116, 0.1);
+    color: var(--cl-error);
+    border: 1px solid rgba(201, 116, 116, 0.2);
 }
 
 .locator-code {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  padding: 12px;
-  margin: 0;
-  overflow-x: auto;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 13px;
-  line-height: 1.4;
+    background: var(--cl-bg-elevated);
+    border: 1px solid var(--cl-border);
+    border-radius: 8px;
+    padding: 12px;
+    margin: 0;
+    overflow-x: auto;
+    font-family: var(--cl-font-mono);
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 .locator-code code {
-  color: #333;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+    color: var(--cl-text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
-/* 驗證狀態樣式 */
-.locator-code code:has-text("✅") {
-  color: #28a745;
-}
-
-.locator-code code:has-text("⚠️") {
-  color: #ffc107;
-}
-
-.locator-code code:has-text("❌") {
-  color: #dc3545;
-}
-
-/* 為不同狀態添加背景色 */
-.locator-code:has([class*="valid"]) {
-  border-left: 4px solid #28a745;
-}
-
-.locator-code:has([class*="warning"]) {
-  border-left: 4px solid #ffc107;
-}
-
-.locator-code:has([class*="error"]) {
-  border-left: 4px solid #dc3545;
-}
-
-#locator-result .result-footer {
-  padding: 16px 20px;
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-  text-align: center;
-}
-
-#locator-result .copy-btn {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-#locator-result .copy-btn:hover {
-  background: #45a049;
-}
-
-/* 錯誤顯示樣式 */
+/* Error Panel */
 #locator-error {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000000;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  border-radius: 16px;
-  overflow: hidden;
-  backdrop-filter: blur(20px);
-  animation: slideIn 0.3s ease-out;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2147483647;
+    max-width: 440px;
+    width: 90vw;
+    font-family: var(--cl-font-sans);
+    box-shadow: var(--cl-shadow);
+    border-radius: 14px;
+    overflow: hidden;
+    animation: cl-fadeIn 0.3s ease-out;
 }
 
 #locator-error .error-content {
-  background: rgba(255, 255, 255, 0.95);
-  color: #333;
-  min-width: 400px;
-  max-width: 600px;
+    background: var(--cl-bg-surface);
+    color: var(--cl-text);
+    border: 1px solid var(--cl-border);
+    border-radius: 14px;
 }
 
 #locator-error .error-header {
-  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-  color: white;
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background: var(--cl-bg-surface);
+    color: var(--cl-error);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--cl-border);
 }
 
 #locator-error .error-header h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+    margin: 0;
+    font-family: var(--cl-font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+#locator-error .close-btn {
+    background: transparent;
+    border: 1px solid var(--cl-border);
+    color: var(--cl-text-muted);
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s ease;
+}
+
+#locator-error .close-btn:hover {
+    border-color: var(--cl-error);
+    color: var(--cl-error);
 }
 
 #locator-error .error-body {
-  padding: 20px;
+    padding: 20px;
 }
 
 #locator-error .error-body p {
-  margin: 0;
-  color: #666;
-  line-height: 1.5;
-}
-
-/* 元素高亮效果 */
-.element-locator-highlight {
-  outline: 3px solid #ff6b6b !important;
-  outline-offset: 2px !important;
-  background-color: rgba(255, 107, 107, 0.1) !important;
-  position: relative;
-}
-
-.element-locator-highlight::after {
-  content: '🎯';
-  position: absolute;
-  top: -25px;
-  left: -5px;
-  background: #ff6b6b;
-  color: white;
-  font-size: 12px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  z-index: 999999;
-}
-
-/* 響應式設計 */
-@media (max-width: 768px) {
-  #locator-result .result-content {
-    min-width: 90vw;
-    max-width: 90vw;
-  }
-  
-  #locator-result .result-body {
-    max-height: 50vh;
-  }
-  
-  #locator-result .result-body pre {
+    margin: 0;
+    color: var(--cl-text-secondary);
     font-size: 12px;
-    padding: 12px;
-  }
-  
-  #element-locator-overlay .overlay-content {
-    flex-direction: column;
-    gap: 8px;
-    padding: 16px 20px;
-  }
+    line-height: 1.6;
+    font-family: var(--cl-font-mono);
 }
 
-/* 滾動條樣式 */
-#locator-result .result-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-#locator-result .result-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-#locator-result .result-body::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-#locator-result .result-body::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* 等待動畫樣式 */
+/* Loading Overlay */
 #locator-loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  backdrop-filter: blur(5px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 30, 34, 0.88);
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--cl-font-sans);
+    backdrop-filter: blur(6px);
 }
 
 #locator-loading .loading-content {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 30px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(20px);
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+    background: var(--cl-bg-surface);
+    border: 1px solid var(--cl-border);
+    padding: 32px 44px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: var(--cl-shadow), var(--cl-glow);
+    animation: cl-fadeInCenter 0.25s ease-out;
 }
 
 #locator-loading .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #e3e3e3;
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 15px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--cl-border-light);
+    border-top-color: var(--cl-accent);
+    border-radius: 50%;
+    animation: cl-spin 0.7s linear infinite;
+    margin: 0 auto 14px;
 }
 
 #locator-loading p {
-  margin: 0;
-  color: #333;
-  font-size: 16px;
-  font-weight: 500;
+    margin: 0;
+    color: var(--cl-text-muted);
+    font-family: var(--cl-font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
 }
 
-/* iframe 信息樣式 */
+/* Iframe Info */
 .iframe-info {
-  background: #e3f2fd;
-  border: 1px solid #2196f3;
-  border-left: 4px solid #2196f3;
-  margin: 16px 20px;
-  border-radius: 6px;
-  padding: 12px;
+    background: var(--cl-bg-elevated);
+    border: 1px solid var(--cl-border);
+    border-left: 3px solid var(--cl-teal);
+    margin: 14px 18px;
+    border-radius: 8px;
+    padding: 12px 14px;
 }
 
 .iframe-header {
-  font-weight: 600;
-  color: #1976d2;
-  font-size: 14px;
-  margin-bottom: 8px;
+    font-family: var(--cl-font-mono);
+    font-weight: 600;
+    color: var(--cl-teal);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
 }
 
 .iframe-locators {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
 }
 
 .iframe-locator {
-  background: #fff;
-  border: 1px solid #2196f3;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: #1976d2;
-  cursor: pointer;
-  transition: all 0.2s;
+    background: var(--cl-bg-base);
+    border: 1px solid var(--cl-border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-family: var(--cl-font-mono);
+    font-size: 10px;
+    color: var(--cl-text);
+    cursor: pointer;
+    transition: all 0.15s ease;
 }
 
 .iframe-locator:hover {
-  background: #2196f3;
-  color: white;
+    border-color: var(--cl-teal);
+    color: var(--cl-teal);
 }
 
 .iframe-note {
-  font-size: 12px;
-  color: #666;
-  font-style: italic;
+    font-size: 10px;
+    color: var(--cl-text-muted);
+    font-style: italic;
+}
+
+/* Scrollbar Styling */
+#locator-result .result-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+#locator-result .result-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#locator-result .result-body::-webkit-scrollbar-thumb {
+    background: var(--cl-border);
+    border-radius: 3px;
+}
+
+#locator-result .result-body::-webkit-scrollbar-thumb:hover {
+    background: var(--cl-border-light);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    #element-locator-overlay {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    #locator-result {
+        width: 95vw;
+        max-width: none;
+    }
+
+    #locator-result .result-body {
+        max-height: 50vh;
+    }
+
+    .locator-item {
+        padding: 12px 14px;
+    }
+
+    .locator-code {
+        padding: 10px;
+        font-size: 11px;
+    }
+}
+
+/* Animations */
+@keyframes cl-slideIn {
+    from { opacity: 0; transform: translateX(14px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes cl-fadeIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.97); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes cl-fadeInCenter {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes cl-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes cl-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
 }

@@ -170,95 +170,50 @@ class ElementLocatorGenerator {
   }
 
   async createOverlay() {
-    // 只在主框架顯示提示
     if (!this.isMainFrame) return;
-
-    // 獲取當前模型信息
-    const modelInfo = await this.getCurrentModelInfo();
-    const modelText = modelInfo ? `${this.getProviderName(modelInfo.provider)} - ${modelInfo.modelName}` : '載入中...';
 
     this.overlayElement = document.createElement('div');
     this.overlayElement.id = 'element-locator-overlay';
     this.overlayElement.innerHTML = `
       <div class="overlay-content">
-        <span>🎯 Element Locator Generator</span>
+        <span>Element Locator Generator</span>
         <span>點擊元素生成 locator，按 ESC 取消</span>
-        <span class="model-info">🤖 ${modelText}</span>
       </div>
     `;
     document.body.appendChild(this.overlayElement);
   }
 
-  async getCurrentModelInfo() {
-    try {
-      const defaultSettings = {
-        provider: 'lmstudio',
-        modelName: 'lm-studio'
-      };
-      const result = await chrome.storage.sync.get(defaultSettings);
-      return {
-        provider: result.provider || 'lmstudio',
-        modelName: result.modelName || 'lm-studio'
-      };
-    } catch (error) {
-      console.error('Failed to get model info:', error);
-      return null;
-    }
-  }
-
-  getProviderName(provider) {
-    const providerNames = {
-      lmstudio: 'LM Studio',
-      ollama: 'Ollama',
-      openai: 'OpenAI',
-      gemini: 'Gemini',
-      anthropic: 'Claude'
-    };
-    return providerNames[provider] || provider;
-  }
-
   handleMouseOver(event) {
-    if (!this.isActive || event.target.id === 'element-locator-overlay') return;
-    
-    this.highlightElement(event.target);
+    event.stopPropagation();
+    const target = event.target;
+    if (target === this.overlayElement || this.overlayElement?.contains(target)) return;
+    if (target.id?.startsWith('locator-')) return;
+    this.highlightElement(target);
   }
 
   handleMouseOut(event) {
-    if (!this.isActive) return;
+    event.stopPropagation();
     this.clearHighlight();
   }
 
   handleClick(event) {
-    if (!this.isActive) return;
-    
-    // 強制阻止所有預設行為和事件傳播
     event.preventDefault();
     event.stopPropagation();
-    event.stopImmediatePropagation();
-    
-    const element = event.target;
-    const elementData = this.extractElementData(element);
-    
+
+    const target = event.target;
+    if (target === this.overlayElement || this.overlayElement?.contains(target)) return;
+    if (target.id?.startsWith('locator-')) return;
+
+    const elementData = this.extractElementData(target);
     this.stopElementSelection();
     this.sendToGemini(elementData);
-    
-    // 返回 false 進一步確保阻止預設行為
-    return false;
   }
 
   handleKeyDown(event) {
     if (event.key === 'Escape') {
-      // 所有框架都執行停止，但只有主框架負責廣播
       this.stopElementSelection();
-      
       if (this.isMainFrame) {
-        // 主框架負責通知所有 iframe 停止
         this.broadcastToFrames('ELEMENT_LOCATOR_STOP');
-      } else {
-        // iframe 也通知主框架停止（防止主框架漏停）
-        window.top.postMessage({
-          type: 'ELEMENT_LOCATOR_STOP_REQUEST'
-        }, '*');
       }
     }
   }
@@ -266,9 +221,9 @@ class ElementLocatorGenerator {
   highlightElement(element) {
     this.clearHighlight();
     this.currentHighlightedElement = element;
-    element.style.outline = '3px solid #ff6b6b';
+    element.style.outline = '3px solid #e8926c';
     element.style.outlineOffset = '2px';
-    element.style.backgroundColor = 'rgba(255, 107, 107, 0.1)';
+    element.style.backgroundColor = 'rgba(232, 146, 108, 0.1)';
   }
 
   clearHighlight() {
@@ -643,7 +598,7 @@ class ElementLocatorGenerator {
       <div class="result-content">
         <div class="result-header">
           <h3>${title}</h3>
-          <button class="close-btn" onclick="this.parentElement.parentElement.parentElement.remove()">✖</button>
+          <button class="close-btn">✖</button>
         </div>
         ${extraInfo}
         <div class="result-body">
@@ -652,6 +607,12 @@ class ElementLocatorGenerator {
       </div>
     `;
     
+    // 綁定關閉按鈕事件
+    const closeBtn = resultDiv.querySelector('.close-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => resultDiv.remove());
+    }
+
     // 綁定複製按鈕事件
     this.bindCopyButtons(resultDiv);
     
@@ -693,20 +654,36 @@ class ElementLocatorGenerator {
     `;
   }
 
+  separateStatus(text) {
+    if (!text) return { value: text, status: null, statusType: null };
+    const patterns = [
+      { regex: /\s*✅\s*\((.+)\)\s*$/, type: 'success' },
+      { regex: /\s*⚠️\s*\((.+)\)\s*$/, type: 'warning' },
+      { regex: /\s*❌\s*\((.+)\)\s*$/, type: 'error' },
+    ];
+    for (const { regex, type } of patterns) {
+      const match = text.match(regex);
+      if (match) {
+        return { value: text.replace(regex, '').trim(), status: match[1], statusType: type };
+      }
+    }
+    return { value: text, status: null, statusType: null };
+  }
+
   parseLocators(locators) {
     const lines = locators.split('\n');
     const result = {};
     
     lines.forEach(line => {
       const trimmed = line.trim();
-      if (trimmed.startsWith('Playwright:')) {
-        result.playwright = trimmed.replace('Playwright:', '').trim();
-      } else if (trimmed.startsWith('CSS:')) {
-        result.css = trimmed.replace('CSS:', '').trim();
-      } else if (trimmed.startsWith('XPath:')) {
-        result.xpath = trimmed.replace('XPath:', '').trim();
-      } else if (trimmed.startsWith('Selenium:')) {
-        result.selenium = trimmed.replace('Selenium:', '').trim();
+      let key = null;
+      let raw = null;
+      if (trimmed.startsWith('Playwright:')) { key = 'playwright'; raw = trimmed.replace('Playwright:', '').trim(); }
+      else if (trimmed.startsWith('CSS:')) { key = 'css'; raw = trimmed.replace('CSS:', '').trim(); }
+      else if (trimmed.startsWith('XPath:')) { key = 'xpath'; raw = trimmed.replace('XPath:', '').trim(); }
+      else if (trimmed.startsWith('Selenium:')) { key = 'selenium'; raw = trimmed.replace('Selenium:', '').trim(); }
+      if (key && raw) {
+        result[key] = this.separateStatus(raw);
       }
     });
     
@@ -715,25 +692,36 @@ class ElementLocatorGenerator {
 
   generateLocatorItems(locators) {
     const items = [
-      { type: 'Playwright', icon: '🎭', value: locators.playwright },
-      { type: 'CSS', icon: '🎨', value: locators.css },
-      { type: 'XPath', icon: '🗂️', value: locators.xpath },
-      { type: 'Selenium', icon: '🤖', value: locators.selenium }
+      { type: 'Playwright', icon: '🎭', data: locators.playwright },
+      { type: 'CSS', icon: '🎨', data: locators.css },
+      { type: 'XPath', icon: '🗂️', data: locators.xpath },
+      { type: 'Selenium', icon: '🤖', data: locators.selenium }
     ];
 
-    return items.map((item, index) => `
-      <div class="locator-item">
-        <div class="locator-header">
-          <span class="locator-type">${item.icon} ${item.type}</span>
-          <button class="copy-single-btn" data-index="${index}">
-            📋 複製
-          </button>
+    return items.map((item, index) => {
+      const value = item.data?.value || '未生成';
+      const status = item.data?.status;
+      const statusType = item.data?.statusType;
+      const statusBadge = status
+        ? `<span class="locator-status status-${statusType}">${status}</span>`
+        : '';
+      return `
+        <div class="locator-item">
+          <div class="locator-header">
+            <span class="locator-type">${item.icon} ${item.type}</span>
+            <div class="locator-actions">
+              ${statusBadge}
+              <button class="copy-single-btn" data-index="${index}">
+                📋 複製
+              </button>
+            </div>
+          </div>
+          <div class="locator-code">
+            <code>${value}</code>
+          </div>
         </div>
-        <div class="locator-code">
-          <code>${item.value || '未生成'}</code>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   bindIframeCopyButtons(resultDiv) {
@@ -783,23 +771,20 @@ class ElementLocatorGenerator {
   bindCopyButtons(resultDiv) {
     const copyButtons = resultDiv.querySelectorAll('.copy-single-btn');
     const locatorItems = [
-      { type: 'Playwright', value: this.currentLocators?.playwright },
-      { type: 'CSS', value: this.currentLocators?.css },
-      { type: 'XPath', value: this.currentLocators?.xpath },
-      { type: 'Selenium', value: this.currentLocators?.selenium }
+      { value: this.currentLocators?.playwright?.value },
+      { value: this.currentLocators?.css?.value },
+      { value: this.currentLocators?.xpath?.value },
+      { value: this.currentLocators?.selenium?.value }
     ];
     
     copyButtons.forEach((button, index) => {
       button.addEventListener('click', async () => {
-        const locatorItem = locatorItems[index];
-        const value = locatorItem?.value || '未生成';
+        const value = locatorItems[index]?.value || '未生成';
         
         try {
-          // 嘗試使用 Clipboard API
           if (navigator.clipboard && window.isSecureContext) {
             await navigator.clipboard.writeText(value);
           } else {
-            // 備用方法：創建臨時 textarea
             const textArea = document.createElement('textarea');
             textArea.value = value;
             textArea.style.position = 'fixed';
@@ -813,16 +798,19 @@ class ElementLocatorGenerator {
           
           const originalText = button.textContent;
           button.textContent = '✅ 已複製';
-          button.style.background = '#4CAF50';
+          button.style.background = 'var(--cl-success, #7fb88a)';
+          button.style.color = 'var(--cl-bg-base, #1e1e22)';
+          button.style.borderColor = 'var(--cl-success, #7fb88a)';
           
           setTimeout(() => {
             button.textContent = originalText;
             button.style.background = '';
+            button.style.color = '';
+            button.style.borderColor = '';
           }, 2000);
           
         } catch (error) {
           console.error('複製失敗:', error);
-          // 顯示複製的內容以便用戶手動複製
           alert(`複製失敗，請手動複製：\n\n${value}`);
         }
       });
@@ -836,7 +824,7 @@ class ElementLocatorGenerator {
       <div class="error-content">
         <div class="error-header">
           <h3>❌ 錯誤</h3>
-          <button class="close-btn" onclick="this.parentElement.parentElement.parentElement.remove()">✖</button>
+          <button class="close-btn">✖</button>
         </div>
         <div class="error-body">
           <p>${error}</p>
@@ -844,6 +832,11 @@ class ElementLocatorGenerator {
       </div>
     `;
     
+    const closeBtn = errorDiv.querySelector('.close-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => errorDiv.remove());
+    }
+
     document.body.appendChild(errorDiv);
   }
 }

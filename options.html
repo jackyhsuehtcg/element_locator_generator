@@ -3,167 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Element Locator Generator - 設定</title>
+    <title>Element Locator Generator — Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="options.css">
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1>🎯 Element Locator Generator</h1>
-            <p class="subtitle">設定 LLM API 伺服器</p>
+            <div class="logo-mark">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="16" cy="16" r="6" fill="currentColor"/>
+                    <line x1="16" y1="2" x2="16" y2="8" stroke="currentColor" stroke-width="2"/>
+                    <line x1="16" y1="24" x2="16" y2="30" stroke="currentColor" stroke-width="2"/>
+                    <line x1="2" y1="16" x2="8" y2="16" stroke="currentColor" stroke-width="2"/>
+                    <line x1="24" y1="16" x2="30" y2="16" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="title-group">
+                <h1>Element Locator Generator</h1>
+                <div class="version-tag">v1.0 — OpenRouter Edition</div>
+            </div>
         </header>
 
         <main class="main-content">
             <form class="settings-form" id="settingsForm">
-                <div class="form-group">
-                    <label for="provider" class="form-label">
-                        <span class="label-text">模型提供商</span>
-                        <span class="label-required">*</span>
-                    </label>
-                    <select id="provider" name="provider" class="form-input" required>
-                        <option value="">請選擇模型提供商</option>
-                        <option value="lmstudio">LM Studio (本地)</option>
-                        <option value="ollama">Ollama (本地)</option>
-                        <option value="openai">OpenAI</option>
-                        <option value="gemini">Google Gemini</option>
-                        <option value="anthropic">Anthropic Claude</option>
-                    </select>
-                    <div class="form-hint">
-                        選擇你要使用的 AI 模型提供商
+                <section class="form-section">
+                    <div class="section-header">
+                        <span class="section-number">01</span>
+                        <h2>Authentication</h2>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="apiUrl" class="form-label">
-                        <span class="label-text">API URL</span>
-                        <span class="label-required">*</span>
-                    </label>
-                    <input 
-                        type="url" 
-                        id="apiUrl" 
-                        name="apiUrl" 
-                        class="form-input" 
-                        placeholder="http://localhost:1234/v1/chat/completions"
-                        required
-                    >
-                    <div class="form-hint">
-                        輸入你的 LLM API 伺服器 URL，支援 OpenAI 相容的 API 格式
+                    <div class="form-group">
+                        <label for="apiKey" class="form-label">
+                            <span class="label-text">API Key</span>
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="password" 
+                                id="apiKey" 
+                                name="apiKey" 
+                                class="form-input" 
+                                placeholder="sk-or-v1-..."
+                                autocomplete="off"
+                                spellcheck="false"
+                                required
+                            >
+                            <button type="button" id="toggleApiKeyBtn" class="toggle-visibility">
+                                <svg class="eye-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M1 10C4 4 16 4 19 10C16 16 4 16 1 10Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                    <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="form-hint">
+                            Required for OpenRouter API. Get your key from <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="form-group">
-                    <label for="modelName" class="form-label">
-                        <span class="label-text">模型名稱</span>
-                    </label>
-                    <input 
-                        type="text" 
-                        id="modelName" 
-                        name="modelName" 
-                        class="form-input" 
-                        placeholder="lm-studio"
-                    >
-                    <div class="form-hint">
-                        模型名稱（選填，預設為 "lm-studio"）
+                <section class="form-section">
+                    <div class="section-header">
+                        <span class="section-number">02</span>
+                        <h2>Model Configuration</h2>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="apiKey" class="form-label">
-                        <span class="label-text">API Key</span>
-                    </label>
-                    <input 
-                        type="password" 
-                        id="apiKey" 
-                        name="apiKey" 
-                        class="form-input" 
-                        placeholder="sk-..."
-                    >
-                    <div class="form-hint">
-                        API 金鑰（選填，本地 LM Studio 通常不需要）
+                    <div class="form-group">
+                        <label for="modelName" class="form-label">
+                            <span class="label-text">Model ID</span>
+                            <span class="label-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="modelName" 
+                            name="modelName" 
+                            class="form-input" 
+                            placeholder="provider/model-name"
+                            autocomplete="off"
+                            spellcheck="false"
+                            required
+                        >
+                        <div class="form-hint">
+                            OpenRouter model identifier. Browse all models at <a href="https://openrouter.ai/models" target="_blank" rel="noopener">openrouter.ai/models</a>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="form-group">
-                    <label for="temperature" class="form-label">
-                        <span class="label-text">Temperature</span>
-                    </label>
-                    <input 
-                        type="number" 
-                        id="temperature" 
-                        name="temperature" 
-                        class="form-input" 
-                        min="0" 
-                        max="2" 
-                        step="0.1" 
-                        value="0.1"
-                    >
-                    <div class="form-hint">
-                        控制回應的隨機性（0.0 - 2.0，建議 0.1 以獲得穩定結果）
+                <section class="form-section">
+                    <div class="section-header">
+                        <span class="section-number">03</span>
+                        <h2>Generation Parameters</h2>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="maxTokens" class="form-label">
-                        <span class="label-text">Max Tokens</span>
-                    </label>
-                    <input 
-                        type="number" 
-                        id="maxTokens" 
-                        name="maxTokens" 
-                        class="form-input" 
-                        min="100" 
-                        max="4096" 
-                        value="512"
-                    >
-                    <div class="form-hint">
-                        最大生成 token 數量（100 - 4096）
+                    <div class="params-grid">
+                        <div class="form-group param-item">
+                            <label for="temperature" class="form-label">
+                                <span class="label-text">Temperature</span>
+                            </label>
+                            <div class="slider-wrapper">
+                                <input 
+                                    type="range" 
+                                    id="temperature" 
+                                    name="temperature" 
+                                    class="form-slider" 
+                                    min="0" 
+                                    max="2" 
+                                    step="0.1" 
+                                    value="0.1"
+                                >
+                                <output class="slider-value" for="temperature">0.1</output>
+                            </div>
+                            <div class="form-hint">Controls randomness. Lower = more deterministic</div>
+                        </div>
+
+                        <div class="form-group param-item">
+                            <label for="maxTokens" class="form-label">
+                                <span class="label-text">Max Tokens</span>
+                            </label>
+                            <div class="slider-wrapper">
+                                <input 
+                                    type="range" 
+                                    id="maxTokens" 
+                                    name="maxTokens" 
+                                    class="form-slider" 
+                                    min="100" 
+                                    max="4096" 
+                                    step="100" 
+                                    value="512"
+                                >
+                                <output class="slider-value" for="maxTokens">512</output>
+                            </div>
+                            <div class="form-hint">Maximum response length in tokens</div>
+                        </div>
                     </div>
-                </div>
+                </section>
 
                 <div class="form-actions">
                     <button type="button" id="testButton" class="btn btn-secondary">
-                        🧪 測試連接
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M14 8A6 6 0 1 1 8 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M8 4V8L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Test Connection
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        💾 儲存設定
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M2 10L6 14L14 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Save Settings
                     </button>
                 </div>
             </form>
 
             <div class="test-result" id="testResult" style="display: none;">
+                <div class="test-result-indicator"></div>
                 <div class="test-result-content">
                     <div class="test-result-icon" id="testResultIcon"></div>
                     <div class="test-result-message" id="testResultMessage"></div>
                 </div>
             </div>
 
-
-            <div class="help-section">
-                <h3>使用說明</h3>
-                <div class="help-content">
-                    <div class="help-item">
-                        <strong>LM Studio:</strong> 
-                        本地 AI 模型服務，預設 URL：<code>http://localhost:1234/v1/chat/completions</code>
+            <section class="help-section">
+                <div class="section-header">
+                    <span class="section-number">?</span>
+                    <h2>Quick Reference</h2>
+                </div>
+                <div class="help-grid">
+                    <div class="help-card">
+                        <h3>OpenRouter</h3>
+                        <p>Unified API gateway providing access to 100+ AI models through a single credential.</p>
                     </div>
-                    <div class="help-item">
-                        <strong>Ollama:</strong> 
-                        本地 AI 模型服務，預設 URL：<code>http://localhost:11434/v1/chat/completions</code>
+                    <div class="help-card">
+                        <h3>Model Format</h3>
+                        <p>Use <code>provider/model</code> format, e.g. <code>google/gemini-2.5-flash</code> or <code>anthropic/claude-3-7-sonnet-20250219</code></p>
                     </div>
-                    <div class="help-item">
-                        <strong>OpenAI:</strong> 
-                        OpenAI 官方 API，需要 API Key，支援 GPT-4 等模型
-                    </div>
-                    <div class="help-item">
-                        <strong>Google Gemini:</strong> 
-                        Google 的 Gemini AI 服務，需要 API Key，支援 Gemini 1.5 等模型
-                    </div>
-                    <div class="help-item">
-                        <strong>Anthropic Claude:</strong> 
-                        Anthropic 的 Claude AI 服務，需要 API Key，支援 Claude 3 等模型
+                    <div class="help-card">
+                        <h3>Browse Models</h3>
+                        <p>View all available models and pricing at <a href="https://openrouter.ai/models" target="_blank" rel="noopener">openrouter.ai/models</a></p>
                     </div>
                 </div>
-            </div>
+            </section>
         </main>
+
+        <footer class="footer">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span class="status-text">Ready</span>
+            </div>
+        </footer>
     </div>
 
     <script src="options.js"></script>

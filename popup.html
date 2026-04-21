@@ -1,267 +1,348 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
   <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      width: 360px;
+    :root {
+      --bg-base: #1e1e22;
+      --bg-surface: #26262c;
+      --bg-elevated: #313138;
+      --border-subtle: #38383f;
+      --border-default: #48484f;
+      --text-primary: #d4d4dc;
+      --text-secondary: #9494a2;
+      --text-muted: #6a6a78;
+      --accent: #d4a574;
+      --accent-hover: #ddb486;
+      --accent-glow: rgba(212, 165, 116, 0.12);
+      --teal: #6ca0b8;
+      --success: #7fb88a;
+      --error: #c97474;
+      --warning: #c9a86c;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --radius: 8px;
+      --transition: 160ms ease;
+    }
+
+    * {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      box-sizing: border-box;
     }
 
-    .header {
-      padding: 20px;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
+    ::selection {
+      background: var(--accent);
+      color: var(--bg-base);
     }
 
-    .header h1 {
-      margin: 0 0 5px 0;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .header p {
+    body {
+      width: 340px;
+      min-height: 200px;
       margin: 0;
-      font-size: 12px;
-      opacity: 0.8;
+      padding: 0;
+      font-family: var(--font-sans);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
     }
 
-    .content {
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .popup-container {
       padding: 20px;
+      position: relative;
+      z-index: 1;
     }
 
-    .api-section {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(10px);
-    }
-
-    .api-section h3 {
-      margin: 0 0 12px 0;
-      font-size: 14px;
+    /* Header */
+    .header {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
-    .input-group {
+    .logo-mark {
+      width: 36px;
+      height: 36px;
       display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      flex-shrink: 0;
     }
 
-    #apiKeyInput {
-      flex: 1;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
+    .logo-mark svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .header-text h1 {
+      font-family: var(--font-mono);
       font-size: 13px;
-      background: rgba(255, 255, 255, 0.9);
-      color: #333;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 2px;
     }
 
-    #apiKeyInput::placeholder {
-      color: #666;
+    .header-text p {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      letter-spacing: 0.03em;
     }
 
+    /* Action Card */
+    .action-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    .action-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .action-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-glow);
+      border-radius: var(--radius);
+      color: var(--accent);
+    }
+
+    .action-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
+    }
+
+    .action-description {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* Buttons */
     .btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      font-size: 13px;
+      width: 100%;
+      padding: 11px 16px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: 11px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s ease;
       display: flex;
       align-items: center;
-      gap: 6px;
       justify-content: center;
+      gap: 8px;
+      transition: all var(--transition);
+      letter-spacing: 0.02em;
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
     }
 
     .btn-primary {
-      background: #4CAF50;
-      color: white;
+      background: var(--accent);
+      color: var(--bg-base);
+      border-color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
     }
 
     .btn-primary:hover {
-      background: #45a049;
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: var(--accent-hover);
+      box-shadow: 0 0 20px var(--accent-glow);
       transform: translateY(-1px);
     }
 
     .btn-danger {
-      background: #f44336;
-      color: white;
+      background: transparent;
+      color: var(--error);
+      border-color: rgba(201, 116, 116, 0.3);
     }
 
     .btn-danger:hover {
-      background: #da190b;
-      transform: translateY(-1px);
+      background: rgba(201, 116, 116, 0.08);
+      border-color: var(--error);
     }
 
     .btn:disabled {
-      opacity: 0.6;
+      opacity: 0.4;
       cursor: not-allowed;
       transform: none !important;
     }
 
-    .action-section {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 16px;
-      backdrop-filter: blur(10px);
-    }
-
-    .action-section h3 {
-      margin: 0 0 12px 0;
-      font-size: 14px;
+    /* Status Message */
+    .status-message {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: 10px;
       display: flex;
       align-items: center;
       gap: 8px;
+      animation: fadeIn 0.2s ease-out;
     }
 
-    .action-section p {
-      margin: 0 0 16px 0;
-      font-size: 12px;
-      opacity: 0.8;
-      line-height: 1.4;
+    .status-message.success {
+      background: rgba(127, 184, 138, 0.08);
+      border: 1px solid rgba(127, 184, 138, 0.2);
+      color: var(--success);
     }
 
-    .status {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      margin-top: 8px;
-      text-align: center;
+    .status-message.error {
+      background: rgba(201, 116, 116, 0.08);
+      border: 1px solid rgba(201, 116, 116, 0.2);
+      color: var(--error);
     }
 
-    .status-success {
-      background: rgba(76, 175, 80, 0.2);
-      color: #4CAF50;
-      border: 1px solid rgba(76, 175, 80, 0.3);
+    .status-message.warning {
+      background: rgba(201, 168, 108, 0.08);
+      border: 1px solid rgba(201, 168, 108, 0.2);
+      color: var(--warning);
     }
 
-    .status-error {
-      background: rgba(244, 67, 54, 0.2);
-      color: #f44336;
-      border: 1px solid rgba(244, 67, 54, 0.3);
-    }
-
-    .status-warning {
-      background: rgba(255, 193, 7, 0.2);
-      color: #FFC107;
-      border: 1px solid rgba(255, 193, 7, 0.3);
-    }
-
-    .help-link {
-      text-align: center;
-      margin-top: 16px;
-    }
-
-    .help-link a {
-      color: rgba(255, 255, 255, 0.8);
-      text-decoration: none;
-      font-size: 11px;
-    }
-
-    .help-link a:hover {
-      color: white;
-      text-decoration: underline;
-    }
-
-    .loading {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+    .status-dot {
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
+      flex-shrink: 0;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .status-message.success .status-dot {
+      background: var(--success);
     }
 
-    .hide {
-      display: none;
+    .status-message.error .status-dot {
+      background: var(--error);
     }
-    
-    .status-info {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 12px;
-      font-size: 11px;
+
+    .status-message.warning .status-dot {
+      background: var(--warning);
     }
-    
-    .status-info p {
-      margin: 0 0 8px 0;
-      font-weight: 600;
+
+    /* Footer */
+    .footer {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    
-    .status-info ul {
-      margin: 0;
-      padding-left: 16px;
-      line-height: 1.4;
+
+    .footer-hint {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
     }
-    
-    .status-info li {
-      margin-bottom: 4px;
+
+    .version-tag {
+      font-size: 9px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      padding: 3px 6px;
+      background: var(--bg-elevated);
+      border-radius: 3px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>🎯 Element Locator Generator</h1>
-    <p>使用本地 LLM 生成精確的元素定位器</p>
-  </div>
-
-  <div class="content">
-    <!-- 操作區域 -->
-    <div class="action-section">
-      <h3>🚀 持續模式</h3>
-      <p>啟動後將持續運行，可跨頁面使用。確保 LM Studio 在 localhost:1234 運行。</p>
-      
-      <button id="enablePersistentMode" class="btn btn-primary" style="width: 100%; margin-bottom: 8px;">
-        <span>⚡</span>
-        <span>啟動持續模式</span>
-      </button>
-      
-      <button id="disablePersistentMode" class="btn btn-danger hide" style="width: 100%;">
-        <span>⏹</span>
-        <span>停用持續模式</span>
-      </button>
-      
-      <div class="status-info">
-        <p><strong>使用說明：</strong></p>
-        <ul>
-          <li>啟動後會在所有頁面顯示可拖移的停止按鈕</li>
-          <li>點擊任何元素即可生成 locator</li>
-          <li>切換頁面後自動重新啟動</li>
-          <li>點擊停止按鈕或使用 popup 停用</li>
-        </ul>
+  <div class="popup-container">
+    <header class="header">
+      <div class="logo-mark">
+        <svg viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="16" cy="16" r="5" fill="currentColor"/>
+          <line x1="16" y1="2" x2="16" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="16" y1="25" x2="16" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="2" y1="16" x2="7" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="25" y1="16" x2="30" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
       </div>
-      
-      <div id="actionStatus" class="hide"></div>
+      <div class="header-text">
+        <h1>Element Locator Generator</h1>
+        <p>OpenRouter Edition</p>
+      </div>
+    </header>
+
+    <div class="action-card">
+      <div class="action-header">
+        <div class="action-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 1v14M1 8h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="action-title">Persistent Mode</span>
+      </div>
+
+      <p class="action-description">
+        Enable continuous element selection. Click any element to generate locators. Mode persists across page navigation.
+      </p>
+
+      <button id="enablePersistentMode" class="btn btn-primary">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Enable Mode
+      </button>
+
+      <button id="disablePersistentMode" class="btn btn-danger hidden">
+        <svg viewBox="0 0 16 16" fill="none">
+          <rect x="3" y="3" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        Disable Mode
+      </button>
+
+      <div id="actionStatus"></div>
     </div>
+
+    <footer class="footer">
+      <span class="footer-hint">Press ESC to cancel</span>
+      <span class="version-tag">v1.0</span>
+    </footer>
   </div>
 
   <script src="popup.js"></script>

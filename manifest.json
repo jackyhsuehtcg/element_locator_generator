@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Web Element Locator Generator",
   "version": "1.0",
-  "description": "Generate element locators using Gemini AI for web automation testing",
+  "description": "Generate element locators using OpenRouter AI for web automation testing",
   "permissions": [
     "activeTab",
     "storage",
@@ -10,7 +10,7 @@
     "notifications"
   ],
   "host_permissions": [
-    "http://localhost:1234/*"
+    "https://openrouter.ai/*"
   ],
   "background": {
     "service_worker": "background.js"

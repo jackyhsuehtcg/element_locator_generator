@@ -1,0 +1,36 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Chrome Extension (Manifest V3), Vanilla JavaScript (ES6+), CSS3, HTML5
+  LLM Provider: OpenRouter (unified API gateway to 100+ models)
+  Default model: google/gemini-2.5-flash
+  API endpoint: https://openrouter.ai/api/v1/chat/completions
+  Storage: chrome.storage.sync for user settings
+  Communication: Chrome Runtime Messaging + window.postMessage (iframe cross-frame)
+  
+  Code style:
+  - ES6 Class-based architecture
+  - Traditional Chinese comments throughout
+  - Async/await for all async operations
+  - No semicolons in JavaScript files
+  - camelCase for methods
+  
+  Architecture:
+  - content.js: Element selection, DOM traversal, data extraction, UI rendering
+  - background.js: OpenRouter API communication, prompt building, response parsing
+  - options.js/options.html: Settings management page
+  - popup.js/popup.html: Popup UI for persistent mode control
+  
+  Supported locator types:
+  - Playwright (semantic locators: getByRole, getByLabel, getByText, etc.)
+  - CSS selectors
+  - XPath expressions
+  - Selenium examples
+
+rules:
+  proposal:
+    - Keep proposals focused on user-visible changes
+    - Always include impact analysis
+  tasks:
+    - Break tasks into small, verifiable work items
+    - Include validation steps for each task
