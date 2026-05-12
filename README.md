@@ -18,12 +18,11 @@
 ## 架構與檔案
 
 - `manifest.json`：Chrome MV3 設定
-- `background.js`：與 LLM 溝通、建構 Prompt、解析回應、注入 content script
-- `content.js`：元素選取、高亮、資料蒐集、結果顯示、複製與驗證
-- `content.css`：選取提示與結果面板樣式
-- `options.html` / `options.js` / `options.css`：設定頁（選擇供應商、API URL、模型、金鑰、測試連線）
-- `popup.html` / `popup.js`：工具列彈出視窗（未來擴充用）
-- `icons/`：擴充圖示
+- `Extension/background.js` + `Extension/background/`：與 LLM 溝通、建構 Prompt、解析回應、注入 content script
+- `Extension/content.js`：元素選取、高亮、資料蒐集、結果顯示、複製與驗證
+- `Extension/lib/`：共用模組（generator、validator、extractor、ui、controller、storage、i18n）
+- `Extension/options.html` / `Extension/options.js` / `Extension/options.css`：設定頁（選擇供應商、API URL、模型、金鑰、測試連線）
+- `Extension/popup.html` / `Extension/popup.js`：工具列彈出視窗（未來擴充用）
 
 ## 支援的 LLM 供應商
 
@@ -56,7 +55,7 @@
 2) Chrome 載入未封裝擴充功能：
 - 打開 `chrome://extensions/`
 - 開啟右上角「開發人員模式」
-- 點「載入未封裝項目」，選擇本專案資料夾
+- 點「載入未封裝項目」，選擇本專案的 `Extension/` 資料夾
 
 3) 如果你使用 LM Studio（預設）
 - 確保 LM Studio 在 `http://localhost:1234` 運行，且提供 OpenAI 相容的 Chat Completions API
@@ -119,7 +118,7 @@ Gemini 特別說明：背景程式會將 `apiKey` 以查詢參數 `?key=...` 加
 
 - 基於 MV3，背景腳本為 `service_worker`。
 - 跨 iframe 透過 `window.postMessage` 溝通，同步開始/停止選取。
-- 若要擴充輸出格式或框架，調整 `background.js` 的 Prompt 與 `content.js` 的結果渲染即可。
+- 若要擴充輸出格式或框架，調整 `Extension/background/` 的 Prompt 與 `Extension/content.js` 的結果渲染即可。
 
 ## 授權
 

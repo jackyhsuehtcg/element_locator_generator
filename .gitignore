@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# IDE/Editor
+.serena/
+.DS_Store
+
+# Build artifacts
+element_locator.zip
+
+# Logs
+*.log

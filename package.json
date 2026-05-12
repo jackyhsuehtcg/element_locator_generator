@@ -1,0 +1,15 @@
+{
+  "name": "element-locator-generator",
+  "version": "1.0.0",
+  "description": "Chrome extension for AI-powered element locator generation",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0",
+    "jsdom": "^24.0.0",
+    "@vitest/coverage-v8": "^1.6.0"
+  }
+}

@@ -37,9 +37,10 @@ Key features:
 - **Error handling**: Try-catch blocks with descriptive error messages
 
 ### Architecture Patterns
-- **Content Script** (`content.js`): Element selection, DOM traversal, data extraction, UI rendering
-- **Background Script** (`background.js`): LLM API communication, prompt building, response parsing
-- **Options Page** (`options.js`): Settings management with provider-specific configurations
+- **Content Script** (`Extension/content.js`): Element selection, DOM traversal, data extraction, UI rendering
+- **Background Script** (`Extension/background.js` + `Extension/background/*.js`): LLM API communication, prompt building, response parsing
+- **Options Page** (`Extension/options.js`): Settings management with provider-specific configurations
+- **Shared Lib** (`Extension/lib/`): Modular utilities (generator, validator, extractor, ui, controller, storage, i18n)
 - **Communication Flow**:
   - Extension icon click → Background script injects content script → User clicks element → Content script collects data → Background script calls LLM → Results displayed in content script panel
   - Cross-frame communication via `window.postMessage` for iframe support
